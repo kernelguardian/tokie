@@ -42,6 +42,19 @@ const SOURCE_LABELS: Record<OTPSource, string> = {
   icloud: "iCloud",
 };
 
+function getMessageUrl(entry: OTPEntry): string | null {
+  switch (entry.source) {
+    case "gmail":
+      return entry.messageId ? `https://mail.google.com/mail/u/0/#inbox/${entry.messageId}` : null;
+    case "icloud":
+      return "https://www.icloud.com/mail/";
+    case "imessage":
+      return null; // Will use Action.Open with Messages app
+    default:
+      return null;
+  }
+}
+
 function formatTimestamp(date: Date): string {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -347,6 +360,33 @@ export default function ListOTPs() {
                       onAction={() => handleCopy(entry)}
                     />
                     <Action.Paste title="Paste OTP" content={entry.code} />
+                  </ActionPanel.Section>
+
+                  <ActionPanel.Section>
+                    {entry.source === "gmail" && getMessageUrl(entry) && (
+                      <Action.OpenInBrowser
+                        title="Open in Gmail"
+                        icon={Icon.Globe}
+                        url={getMessageUrl(entry)!}
+                        shortcut={{ modifiers: ["cmd"], key: "o" }}
+                      />
+                    )}
+                    {entry.source === "icloud" && (
+                      <Action.OpenInBrowser
+                        title="Open iCloud Mail"
+                        icon={Icon.Globe}
+                        url="https://www.icloud.com/mail/"
+                        shortcut={{ modifiers: ["cmd"], key: "o" }}
+                      />
+                    )}
+                    {entry.source === "imessage" && (
+                      <Action.Open
+                        title="Open Messages"
+                        icon={Icon.Message}
+                        target="imessage://"
+                        shortcut={{ modifiers: ["cmd"], key: "o" }}
+                      />
+                    )}
                   </ActionPanel.Section>
 
                   {(entry.source === "gmail" || entry.source === "icloud") && (

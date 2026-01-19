@@ -19,48 +19,48 @@
   "preferences": [
     {
       "name": "enableIMessage",
-      "title": "Sources",
+      "title": "Use iMessage",
       "description": "Fetch OTPs from iMessage and SMS messages",
       "type": "checkbox",
       "default": true,
       "required": false,
-      "label": "iMessage/SMS"
+      "label": "Yes"
     },
     {
       "name": "enableGmail",
-      "title": "Sources",
-      "description": "Fetch OTPs from Gmail (requires OAuth Client ID)",
+      "title": "Use Gmail",
+      "description": "Fetch OTPs from Gmail (requires OAuth setup)",
       "type": "checkbox",
       "default": false,
       "required": false,
-      "label": "Gmail"
+      "label": "Yes"
     },
     {
       "name": "enableICloudMail",
-      "title": "Sources",
+      "title": "Use iCloud Mail",
       "description": "Fetch OTPs from iCloud Mail via IMAP",
       "type": "checkbox",
       "default": false,
       "required": false,
-      "label": "iCloud Mail"
+      "label": "Yes"
     },
     {
       "name": "markAsRead",
-      "title": "Configuration",
+      "title": "Mark as Read",
       "description": "Mark emails as read after copying OTP (Gmail and iCloud)",
       "type": "checkbox",
       "default": false,
       "required": false,
-      "label": "Mark as Read"
+      "label": "Yes"
     },
     {
       "name": "autoDelete",
-      "title": "Configuration",
+      "title": "Delete After Copy",
       "description": "Delete email after copying OTP (Gmail and iCloud)",
       "type": "checkbox",
       "default": false,
       "required": false,
-      "label": "Delete After Copy"
+      "label": "Yes"
     },
     {
       "name": "lookbackMinutes",

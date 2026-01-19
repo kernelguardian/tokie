@@ -34,7 +34,11 @@ async function getAccessToken(): Promise<string | null> {
   if (tokenSet?.accessToken) {
     if (tokenSet.isExpired()) {
       // Refresh the token
-      const newTokens = await refreshTokens(tokenSet.refreshToken!, prefs.gmailClientId);
+      const newTokens = await refreshTokens(
+        tokenSet.refreshToken!,
+        prefs.gmailClientId,
+        prefs.gmailClientSecret
+      );
       if (newTokens) {
         await client.setTokens(newTokens);
         return newTokens.accessToken;

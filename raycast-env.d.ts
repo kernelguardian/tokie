@@ -8,15 +8,15 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 type ExtensionPreferences = {
-  /** Sources - Fetch OTPs from iMessage and SMS messages */
+  /** Use iMessage - Fetch OTPs from iMessage and SMS messages */
   "enableIMessage": boolean,
-  /** Sources - Fetch OTPs from Gmail (requires OAuth Client ID) */
+  /** Use Gmail - Fetch OTPs from Gmail (requires OAuth setup) */
   "enableGmail": boolean,
-  /** Sources - Fetch OTPs from iCloud Mail via IMAP */
+  /** Use iCloud Mail - Fetch OTPs from iCloud Mail via IMAP */
   "enableICloudMail": boolean,
-  /** Configuration - Mark emails as read after copying OTP (Gmail and iCloud) */
+  /** Mark as Read - Mark emails as read after copying OTP (Gmail and iCloud) */
   "markAsRead": boolean,
-  /** Configuration - Delete email after copying OTP (Gmail and iCloud) */
+  /** Delete After Copy - Delete email after copying OTP (Gmail and iCloud) */
   "autoDelete": boolean,
   /** Configuration - How far back to search for OTPs (in minutes) */
   "lookbackMinutes": string,
