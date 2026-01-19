@@ -357,11 +357,11 @@ export default function ListOTPs() {
                 <ActionPanel>
                   <ActionPanel.Section>
                     <Action
-                      title="Copy Otp"
+                      title="Copy to Clipboard"
                       icon={Icon.Clipboard}
                       onAction={() => handleCopy(entry)}
                     />
-                    <Action.Paste title="Paste Otp" content={entry.code} />
+                    <Action.Paste title="Paste in Active App" content={entry.code} />
                   </ActionPanel.Section>
 
                   <ActionPanel.Section>
