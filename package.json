@@ -1,0 +1,127 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "tokie",
+  "title": "Tokie",
+  "description": "Unified OTP retrieval from iMessage, Gmail, and iCloud Mail. Quickly copy verification codes without context switching.",
+  "icon": "extension-icon.png",
+  "author": "raycast",
+  "categories": ["Productivity", "Security"],
+  "license": "MIT",
+  "platforms": ["macOS"],
+  "commands": [
+    {
+      "name": "view-2fa-codes",
+      "title": "View 2FA Codes",
+      "description": "View and copy recent one-time passcodes from your messages and emails",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "enableIMessage",
+      "title": "Sources",
+      "description": "Fetch OTPs from iMessage and SMS messages",
+      "type": "checkbox",
+      "default": true,
+      "required": false,
+      "label": "iMessage/SMS"
+    },
+    {
+      "name": "enableGmail",
+      "title": "Sources",
+      "description": "Fetch OTPs from Gmail (requires OAuth Client ID)",
+      "type": "checkbox",
+      "default": false,
+      "required": false,
+      "label": "Gmail"
+    },
+    {
+      "name": "enableICloudMail",
+      "title": "Sources",
+      "description": "Fetch OTPs from iCloud Mail via IMAP",
+      "type": "checkbox",
+      "default": false,
+      "required": false,
+      "label": "iCloud Mail"
+    },
+    {
+      "name": "markAsRead",
+      "title": "Configuration",
+      "description": "Mark emails as read after copying OTP (Gmail and iCloud)",
+      "type": "checkbox",
+      "default": false,
+      "required": false,
+      "label": "Mark as Read"
+    },
+    {
+      "name": "autoDelete",
+      "title": "Configuration",
+      "description": "Delete email after copying OTP (Gmail and iCloud)",
+      "type": "checkbox",
+      "default": false,
+      "required": false,
+      "label": "Delete After Copy"
+    },
+    {
+      "name": "lookbackMinutes",
+      "title": "Configuration",
+      "description": "How far back to search for OTPs (in minutes)",
+      "type": "textfield",
+      "default": "3",
+      "required": false,
+      "placeholder": "3"
+    },
+    {
+      "name": "gmailClientId",
+      "title": "Gmail",
+      "description": "OAuth Client ID for Gmail API access",
+      "type": "textfield",
+      "required": false,
+      "placeholder": "your-client-id.apps.googleusercontent.com"
+    },
+    {
+      "name": "gmailClientSecret",
+      "title": "Gmail",
+      "description": "OAuth Client Secret (only for Web application type)",
+      "type": "password",
+      "required": false
+    },
+    {
+      "name": "icloudEmail",
+      "title": "iCloud Mail",
+      "description": "Your iCloud email address",
+      "type": "textfield",
+      "required": false,
+      "placeholder": "you@icloud.com"
+    },
+    {
+      "name": "icloudAppPassword",
+      "title": "iCloud Mail",
+      "description": "App-specific password (generate at appleid.apple.com)",
+      "type": "password",
+      "required": false
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.83.0",
+    "imapflow": "^1.0.164",
+    "mailparser": "^3.7.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^1.0.11",
+    "@types/node": "22.5.0",
+    "@types/mailparser": "^3.4.4",
+    "eslint": "^8.57.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4"
+  },
+  "scripts": {
+    "build": "ray build",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}
