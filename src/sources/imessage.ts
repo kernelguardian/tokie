@@ -75,7 +75,12 @@ export const imessageSource: DataSource = {
   },
 
   async fetchOTPs(lookbackMinutes: number): Promise<OTPEntry[]> {
-    console.log("[DEBUG] iMessage fetchOTPs called, enabled:", this.isEnabled(), "configured:", this.isConfigured());
+    console.log(
+      "[DEBUG] iMessage fetchOTPs called, enabled:",
+      this.isEnabled(),
+      "configured:",
+      this.isConfigured()
+    );
 
     if (!this.isEnabled() || !this.isConfigured()) {
       return [];
@@ -166,7 +171,12 @@ export const imessageSource: DataSource = {
       for (const msg of messages) {
         if (!msg.text) continue;
 
-        console.log("[DEBUG] iMessage: Checking message from", msg.sender, "- text:", msg.text.slice(0, 100));
+        console.log(
+          "[DEBUG] iMessage: Checking message from",
+          msg.sender,
+          "- text:",
+          msg.text.slice(0, 100)
+        );
         const otpMatch = extractOTP(msg.text);
         console.log("[DEBUG] iMessage: OTP match result:", otpMatch);
         if (otpMatch) {

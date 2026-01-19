@@ -51,7 +51,12 @@ export const icloudSource: DataSource = {
   },
 
   async fetchOTPs(lookbackMinutes: number): Promise<OTPEntry[]> {
-    console.log("[DEBUG] iCloud fetchOTPs called, enabled:", this.isEnabled(), "configured:", this.isConfigured());
+    console.log(
+      "[DEBUG] iCloud fetchOTPs called, enabled:",
+      this.isEnabled(),
+      "configured:",
+      this.isConfigured()
+    );
 
     if (!this.isEnabled() || !this.isConfigured()) {
       return [];

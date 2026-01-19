@@ -4,7 +4,7 @@
   "title": "Tokie",
   "description": "Unified OTP retrieval from iMessage, Gmail, and iCloud Mail. Quickly copy verification codes without context switching.",
   "icon": "extension-icon.png",
-  "author": "raycast",
+  "author": "asish.bm",
   "categories": ["Productivity", "Security"],
   "license": "MIT",
   "platforms": ["macOS"],

@@ -330,15 +330,24 @@ export default function ListOTPs() {
             <List.Item
               key={entry.id}
               title={entry.code}
-              subtitle={showDetail ? undefined : (entry.subject || formatSender(entry.sender))}
+              subtitle={showDetail ? undefined : entry.subject || formatSender(entry.sender)}
               icon={{ source: SOURCE_ICONS[entry.source], tintColor: SOURCE_COLORS[entry.source] }}
-              accessories={showDetail ? undefined : [
-                { tag: { value: SOURCE_LABELS[entry.source], color: SOURCE_COLORS[entry.source] } },
-                {
-                  text: formatTimestamp(entry.timestamp),
-                  tooltip: entry.timestamp.toLocaleString(),
-                },
-              ]}
+              accessories={
+                showDetail
+                  ? undefined
+                  : [
+                      {
+                        tag: {
+                          value: SOURCE_LABELS[entry.source],
+                          color: SOURCE_COLORS[entry.source],
+                        },
+                      },
+                      {
+                        text: formatTimestamp(entry.timestamp),
+                        tooltip: entry.timestamp.toLocaleString(),
+                      },
+                    ]
+              }
               detail={
                 <List.Item.Detail
                   markdown={`# ${entry.code}\n\n**From:** ${entry.sender}\n\n${entry.subject ? `**Subject:** ${entry.subject}\n\n` : ""}**Time:** ${entry.timestamp.toLocaleString()}\n\n---\n\n${entry.rawMessage}`}
@@ -348,11 +357,11 @@ export default function ListOTPs() {
                 <ActionPanel>
                   <ActionPanel.Section>
                     <Action
-                      title="Copy OTP"
+                      title="Copy Otp"
                       icon={Icon.Clipboard}
                       onAction={() => handleCopy(entry)}
                     />
-                    <Action.Paste title="Paste OTP" content={entry.code} />
+                    <Action.Paste title="Paste Otp" content={entry.code} />
                   </ActionPanel.Section>
 
                   <ActionPanel.Section>
