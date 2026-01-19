@@ -42,18 +42,6 @@ export const imessageSource: DataSource = {
       const appleEpochOffset = 978307200; // seconds from Unix epoch to Apple epoch
       const cutoffApple = (cutoffDate.getTime() / 1000 - appleEpochOffset) * 1_000_000_000;
 
-      console.log("[DEBUG] Lookback minutes:", lookbackMinutes);
-      console.log("[DEBUG] Cutoff date:", cutoffDate.toISOString());
-      console.log("[DEBUG] Cutoff Apple timestamp:", cutoffApple);
-
-      // Debug: check what dates look like in the database
-      const debugQuery = `SELECT m.ROWID, m.date, substr(m.text, 1, 30) FROM message m WHERE m.text IS NOT NULL AND m.is_from_me = 0 ORDER BY m.date DESC LIMIT 3`;
-      const debugResult = execSync(
-        `sqlite3 "${MESSAGES_DB_PATH}" "${debugQuery}"`,
-        { encoding: "utf-8", timeout: 5000 }
-      );
-      console.log("[DEBUG] Recent messages in DB (no date filter):", debugResult);
-
       // Query the Messages database
       // Using sqlite3 CLI to avoid native module dependencies
       const query = `
@@ -82,15 +70,11 @@ export const imessageSource: DataSource = {
         }
       );
 
-      console.log("[DEBUG] sqlite3 raw result:", result);
-
       if (!result || result.trim() === "") {
-        console.log("[DEBUG] No messages found in database");
         return [];
       }
 
       const lines = result.trim().split("\n");
-      console.log("[DEBUG] Found", lines.length, "lines from database");
 
       const messages: Array<{
         ROWID: number;
@@ -101,7 +85,6 @@ export const imessageSource: DataSource = {
 
       for (const line of lines) {
         const parts = line.split("\t");
-        console.log("[DEBUG] Line parts count:", parts.length, "parts:", parts);
         if (parts.length >= 5) {
           messages.push({
             ROWID: parseInt(parts[0], 10),
@@ -112,14 +95,10 @@ export const imessageSource: DataSource = {
         }
       }
 
-      console.log("[DEBUG] Parsed", messages.length, "messages");
-
       for (const msg of messages) {
         if (!msg.text) continue;
 
-        console.log("[DEBUG] Checking message:", msg.text.substring(0, 100));
         const otpMatch = extractOTP(msg.text);
-        console.log("[DEBUG] OTP match result:", otpMatch);
         if (otpMatch) {
           // Convert Apple epoch (nanoseconds) back to JavaScript Date
           const timestamp = new Date((msg.date / 1_000_000_000 + appleEpochOffset) * 1000);
@@ -135,14 +114,9 @@ export const imessageSource: DataSource = {
           });
         }
       }
-    } catch (error) {
+    } catch {
       // Database access might fail due to permissions
       // This is expected on first run before Full Disk Access is granted
-      console.error("[DEBUG] Failed to read iMessage database:", error);
-      if (error instanceof Error) {
-        console.error("[DEBUG] Error message:", error.message);
-        console.error("[DEBUG] Error stack:", error.stack);
-      }
     }
 
     return entries;

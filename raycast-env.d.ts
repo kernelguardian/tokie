@@ -18,15 +18,15 @@ type ExtensionPreferences = {
   "markAsRead": boolean,
   /** Delete After Copy - Delete email after copying OTP (Gmail and iCloud) */
   "autoDelete": boolean,
-  /** Configuration - How far back to search for OTPs (in minutes) */
+  /** Lookback Time (minutes) - How far back to search for OTPs */
   "lookbackMinutes": string,
-  /** Gmail - OAuth Client ID for Gmail API access */
+  /** Gmail Client ID - OAuth Client ID for Gmail API access */
   "gmailClientId"?: string,
-  /** Gmail - OAuth Client Secret (only for Web application type) */
+  /** Gmail Client Secret - OAuth Client Secret (only for Web application type) */
   "gmailClientSecret"?: string,
-  /** iCloud Mail - Your iCloud email address */
+  /** iCloud Email - Your iCloud email address */
   "icloudEmail"?: string,
-  /** iCloud Mail - App-specific password (generate at appleid.apple.com) */
+  /** iCloud App Password - App-specific password (generate at appleid.apple.com) */
   "icloudAppPassword"?: string
 }
 

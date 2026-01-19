@@ -42,19 +42,6 @@ const SOURCE_LABELS: Record<OTPSource, string> = {
   icloud: "iCloud",
 };
 
-function getMessageUrl(entry: OTPEntry): string | null {
-  switch (entry.source) {
-    case "gmail":
-      return entry.messageId ? `https://mail.google.com/mail/u/0/#inbox/${entry.messageId}` : null;
-    case "icloud":
-      return "https://www.icloud.com/mail/";
-    case "imessage":
-      return null; // Will use Action.Open with Messages app
-    default:
-      return null;
-  }
-}
-
 function formatTimestamp(date: Date): string {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -86,6 +73,7 @@ export default function ListOTPs() {
   const [otps, setOTPs] = useState<OTPEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [gmailAuthorized, setGmailAuthorized] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
   const prefs = getPreferenceValues<Preferences>();
   const lookbackMinutes = parseInt(prefs.lookbackMinutes, 10) || 10;
 
@@ -247,7 +235,7 @@ export default function ListOTPs() {
   }
 
   return (
-    <List isLoading={isLoading} searchBarPlaceholder="Search OTPs...">
+    <List isLoading={isLoading} searchBarPlaceholder="Search OTPs..." isShowingDetail={showDetail}>
       {needsGmailAuth && (
         <List.Section title="Setup Required">
           <List.Item
@@ -342,15 +330,20 @@ export default function ListOTPs() {
             <List.Item
               key={entry.id}
               title={entry.code}
-              subtitle={entry.subject || formatSender(entry.sender)}
+              subtitle={showDetail ? undefined : (entry.subject || formatSender(entry.sender))}
               icon={{ source: SOURCE_ICONS[entry.source], tintColor: SOURCE_COLORS[entry.source] }}
-              accessories={[
+              accessories={showDetail ? undefined : [
                 { tag: { value: SOURCE_LABELS[entry.source], color: SOURCE_COLORS[entry.source] } },
                 {
                   text: formatTimestamp(entry.timestamp),
                   tooltip: entry.timestamp.toLocaleString(),
                 },
               ]}
+              detail={
+                <List.Item.Detail
+                  markdown={`# ${entry.code}\n\n**From:** ${entry.sender}\n\n${entry.subject ? `**Subject:** ${entry.subject}\n\n` : ""}**Time:** ${entry.timestamp.toLocaleString()}\n\n---\n\n${entry.rawMessage}`}
+                />
+              }
               actions={
                 <ActionPanel>
                   <ActionPanel.Section>
@@ -363,30 +356,12 @@ export default function ListOTPs() {
                   </ActionPanel.Section>
 
                   <ActionPanel.Section>
-                    {entry.source === "gmail" && getMessageUrl(entry) && (
-                      <Action.OpenInBrowser
-                        title="Open in Gmail"
-                        icon={Icon.Globe}
-                        url={getMessageUrl(entry)!}
-                        shortcut={{ modifiers: ["cmd"], key: "o" }}
-                      />
-                    )}
-                    {entry.source === "icloud" && (
-                      <Action.OpenInBrowser
-                        title="Open iCloud Mail"
-                        icon={Icon.Globe}
-                        url="https://www.icloud.com/mail/"
-                        shortcut={{ modifiers: ["cmd"], key: "o" }}
-                      />
-                    )}
-                    {entry.source === "imessage" && (
-                      <Action.Open
-                        title="Open Messages"
-                        icon={Icon.Message}
-                        target="imessage://"
-                        shortcut={{ modifiers: ["cmd"], key: "o" }}
-                      />
-                    )}
+                    <Action
+                      title={showDetail ? "Hide Message" : "Show Message"}
+                      icon={showDetail ? Icon.EyeDisabled : Icon.Eye}
+                      shortcut={{ modifiers: ["cmd"], key: "o" }}
+                      onAction={() => setShowDetail(!showDetail)}
+                    />
                   </ActionPanel.Section>
 
                   {(entry.source === "gmail" || entry.source === "icloud") && (
@@ -415,7 +390,7 @@ export default function ListOTPs() {
                     <Action
                       title="Open Preferences"
                       icon={Icon.Gear}
-                      shortcut={{ modifiers: ["cmd"], key: "," }}
+                      shortcut={{ modifiers: ["cmd", "shift"], key: "," }}
                       onAction={openExtensionPreferences}
                     />
                   </ActionPanel.Section>

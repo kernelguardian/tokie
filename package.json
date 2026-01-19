@@ -64,8 +64,8 @@
     },
     {
       "name": "lookbackMinutes",
-      "title": "Configuration",
-      "description": "How far back to search for OTPs (in minutes)",
+      "title": "Lookback Time (minutes)",
+      "description": "How far back to search for OTPs",
       "type": "textfield",
       "default": "3",
       "required": false,
@@ -73,7 +73,7 @@
     },
     {
       "name": "gmailClientId",
-      "title": "Gmail",
+      "title": "Gmail Client ID",
       "description": "OAuth Client ID for Gmail API access",
       "type": "textfield",
       "required": false,
@@ -81,14 +81,14 @@
     },
     {
       "name": "gmailClientSecret",
-      "title": "Gmail",
+      "title": "Gmail Client Secret",
       "description": "OAuth Client Secret (only for Web application type)",
       "type": "password",
       "required": false
     },
     {
       "name": "icloudEmail",
-      "title": "iCloud Mail",
+      "title": "iCloud Email",
       "description": "Your iCloud email address",
       "type": "textfield",
       "required": false,
@@ -96,7 +96,7 @@
     },
     {
       "name": "icloudAppPassword",
-      "title": "iCloud Mail",
+      "title": "iCloud App Password",
       "description": "App-specific password (generate at appleid.apple.com)",
       "type": "password",
       "required": false

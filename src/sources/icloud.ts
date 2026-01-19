@@ -26,10 +26,13 @@ async function getImapClient(): Promise<ImapFlow | null> {
   });
 
   try {
+    console.log("[DEBUG] iCloud: Connecting to IMAP with email:", prefs.icloudEmail);
+    console.log("[DEBUG] iCloud: Password length:", prefs.icloudAppPassword?.length || 0);
     await client.connect();
+    console.log("[DEBUG] iCloud: Connected successfully");
     return client;
   } catch (error) {
-    console.error("Failed to connect to iCloud IMAP:", error);
+    console.error("[DEBUG] iCloud: Failed to connect to IMAP:", error);
     return null;
   }
 }
@@ -48,6 +51,8 @@ export const icloudSource: DataSource = {
   },
 
   async fetchOTPs(lookbackMinutes: number): Promise<OTPEntry[]> {
+    console.log("[DEBUG] iCloud fetchOTPs called, enabled:", this.isEnabled(), "configured:", this.isConfigured());
+
     if (!this.isEnabled() || !this.isConfigured()) {
       return [];
     }
@@ -56,17 +61,21 @@ export const icloudSource: DataSource = {
     const client = await getImapClient();
 
     if (!client) {
+      console.log("[DEBUG] iCloud: Failed to get IMAP client");
       return [];
     }
 
     try {
+      console.log("[DEBUG] iCloud: Opening INBOX...");
       await client.mailboxOpen("INBOX");
 
       const sinceDate = new Date(Date.now() - lookbackMinutes * 60 * 1000);
+      console.log("[DEBUG] iCloud: Searching for messages since:", sinceDate.toISOString());
 
       const messages = await client.search({
         since: sinceDate,
       });
+      console.log("[DEBUG] iCloud: Found", messages.length, "messages");
 
       if (messages.length === 0) {
         await client.logout();
@@ -87,8 +96,10 @@ export const icloudSource: DataSource = {
             ? parsed.html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ")
             : "";
 
+          console.log("[DEBUG] iCloud: Checking email - Subject:", parsed.subject);
           const textToCheck = `${parsed.subject || ""} ${textContent} ${htmlContent}`;
           const otpMatch = extractOTP(textToCheck);
+          console.log("[DEBUG] iCloud: OTP match result:", otpMatch);
 
           if (otpMatch) {
             const sender =
