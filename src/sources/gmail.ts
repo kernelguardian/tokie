@@ -41,7 +41,7 @@ async function getAccessToken(): Promise<string | null> {
       );
       if (newTokens) {
         await client.setTokens(newTokens);
-        return newTokens.accessToken;
+        return newTokens.access_token;
       }
       return null;
     }
@@ -84,9 +84,9 @@ async function refreshTokens(
     };
 
     return {
-      accessToken: data.access_token,
-      refreshToken: data.refresh_token || refreshToken,
-      expiresIn: data.expires_in,
+      access_token: data.access_token,
+      refresh_token: data.refresh_token || refreshToken,
+      expires_in: data.expires_in,
     };
   } catch {
     return null;
@@ -149,8 +149,8 @@ export async function authorizeGmail(): Promise<void> {
   };
 
   await client.setTokens({
-    accessToken: tokens.access_token,
-    refreshToken: tokens.refresh_token,
+    access_token: tokens.access_token,
+    refresh_token: tokens.refresh_token,
     expiresIn: tokens.expires_in,
   });
 }

@@ -1,6 +1,6 @@
 import { getPreferenceValues } from "@raycast/api";
 import { ImapFlow } from "imapflow";
-import { simpleParser, ParsedMail } from "mailparser";
+import { simpleParser } from "mailparser";
 import { DataSource, OTPEntry, Preferences } from "../types";
 import { extractOTP } from "../otp-detector";
 
@@ -77,9 +77,12 @@ export const icloudSource: DataSource = {
       const sinceDate = new Date(Date.now() - lookbackMinutes * 60 * 1000);
       console.log("[DEBUG] iCloud: Searching for messages since:", sinceDate.toISOString());
 
-      const messages = await client.search({
+      const searchResult = await client.search({
         since: sinceDate,
       });
+
+      // Handle case where search returns false (no results)
+      const messages = searchResult === false ? [] : searchResult;
       console.log("[DEBUG] iCloud: Found", messages.length, "messages");
 
       if (messages.length === 0) {
@@ -95,7 +98,8 @@ export const icloudSource: DataSource = {
         uid: true,
       })) {
         try {
-          const parsed: ParsedMail = await simpleParser(msg.source);
+          if (!msg.source) continue;
+          const parsed = await simpleParser(msg.source);
           const textContent = parsed.text || "";
           const htmlContent = parsed.html
             ? parsed.html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ")
