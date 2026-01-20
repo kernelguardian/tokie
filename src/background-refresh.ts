@@ -47,9 +47,7 @@ export default async function backgroundRefresh() {
   const allOTPs: OTPEntry[] = [];
   const sources = [imessageSource, gmailSource, icloudSource];
 
-  const results = await Promise.allSettled(
-    sources.map((source) => source.fetchOTPs(lookbackMinutes))
-  );
+  const results = await Promise.allSettled(sources.map((source) => source.fetchOTPs(lookbackMinutes)));
 
   for (const result of results) {
     if (result.status === "fulfilled") {

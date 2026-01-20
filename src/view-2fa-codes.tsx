@@ -90,9 +90,7 @@ export default function ListOTPs() {
       setGmailAuthorized(authorized);
     }
 
-    const results = await Promise.allSettled(
-      sources.map((source) => source.fetchOTPs(lookbackMinutes))
-    );
+    const results = await Promise.allSettled(sources.map((source) => source.fetchOTPs(lookbackMinutes)));
 
     for (const result of results) {
       if (result.status === "fulfilled") {
@@ -230,8 +228,7 @@ export default function ListOTPs() {
 
   const needsGmailAuth = prefs.enableGmail && prefs.gmailClientId && !gmailAuthorized && !isLoading;
   const needsGmailConfig = prefs.enableGmail && !prefs.gmailClientId;
-  const needsICloudConfig =
-    prefs.enableICloudMail && (!prefs.icloudEmail || !prefs.icloudAppPassword);
+  const needsICloudConfig = prefs.enableICloudMail && (!prefs.icloudEmail || !prefs.icloudAppPassword);
   const needsMessagesAccess = prefs.enableIMessage && !checkMessagesAccess();
 
   if (!hasEnabledSource) {
@@ -242,11 +239,7 @@ export default function ListOTPs() {
           description="Enable at least one source in extension preferences"
           actions={
             <ActionPanel>
-              <Action
-                title="Open Preferences"
-                icon={Icon.Gear}
-                onAction={openExtensionPreferences}
-              />
+              <Action title="Open Preferences" icon={Icon.Gear} onAction={openExtensionPreferences} />
             </ActionPanel>
           }
         />
@@ -279,11 +272,7 @@ export default function ListOTPs() {
             icon={{ source: Icon.Envelope, tintColor: Color.Orange }}
             actions={
               <ActionPanel>
-                <Action
-                  title="Open Preferences"
-                  icon={Icon.Gear}
-                  onAction={openExtensionPreferences}
-                />
+                <Action title="Open Preferences" icon={Icon.Gear} onAction={openExtensionPreferences} />
               </ActionPanel>
             }
           />
@@ -298,11 +287,7 @@ export default function ListOTPs() {
             icon={{ source: Icon.Cloud, tintColor: Color.Orange }}
             actions={
               <ActionPanel>
-                <Action
-                  title="Open Preferences"
-                  icon={Icon.Gear}
-                  onAction={openExtensionPreferences}
-                />
+                <Action title="Open Preferences" icon={Icon.Gear} onAction={openExtensionPreferences} />
               </ActionPanel>
             }
           />
@@ -334,11 +319,7 @@ export default function ListOTPs() {
           actions={
             <ActionPanel>
               <Action title="Refresh" icon={Icon.ArrowClockwise} onAction={loadOTPs} />
-              <Action
-                title="Open Preferences"
-                icon={Icon.Gear}
-                onAction={openExtensionPreferences}
-              />
+              <Action title="Open Preferences" icon={Icon.Gear} onAction={openExtensionPreferences} />
             </ActionPanel>
           }
         />
@@ -376,11 +357,7 @@ export default function ListOTPs() {
               actions={
                 <ActionPanel>
                   <ActionPanel.Section>
-                    <Action
-                      title="Copy to Clipboard"
-                      icon={Icon.Clipboard}
-                      onAction={() => handleCopy(entry)}
-                    />
+                    <Action title="Copy to Clipboard" icon={Icon.Clipboard} onAction={() => handleCopy(entry)} />
                     <Action.Paste title="Paste in Active App" content={entry.code} />
                   </ActionPanel.Section>
 
@@ -395,11 +372,7 @@ export default function ListOTPs() {
 
                   {(entry.source === "gmail" || entry.source === "icloud") && (
                     <ActionPanel.Section>
-                      <Action
-                        title="Mark as Read"
-                        icon={Icon.Eye}
-                        onAction={() => handleMarkAsRead(entry)}
-                      />
+                      <Action title="Mark as Read" icon={Icon.Eye} onAction={() => handleMarkAsRead(entry)} />
                       <Action
                         title="Delete Message"
                         icon={Icon.Trash}

@@ -51,12 +51,7 @@ export const icloudSource: DataSource = {
   },
 
   async fetchOTPs(lookbackMinutes: number): Promise<OTPEntry[]> {
-    console.log(
-      "[DEBUG] iCloud fetchOTPs called, enabled:",
-      this.isEnabled(),
-      "configured:",
-      this.isConfigured()
-    );
+    console.log("[DEBUG] iCloud fetchOTPs called, enabled:", this.isEnabled(), "configured:", this.isConfigured());
 
     if (!this.isEnabled() || !this.isConfigured()) {
       return [];
@@ -101,9 +96,7 @@ export const icloudSource: DataSource = {
           if (!msg.source) continue;
           const parsed = await simpleParser(msg.source);
           const textContent = parsed.text || "";
-          const htmlContent = parsed.html
-            ? parsed.html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ")
-            : "";
+          const htmlContent = parsed.html ? parsed.html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ") : "";
 
           console.log("[DEBUG] iCloud: Checking email - Subject:", parsed.subject);
           const textToCheck = `${parsed.subject || ""} ${textContent} ${htmlContent}`;
@@ -111,8 +104,7 @@ export const icloudSource: DataSource = {
           console.log("[DEBUG] iCloud: OTP match result:", otpMatch);
 
           if (otpMatch) {
-            const sender =
-              parsed.from?.value?.[0]?.address || parsed.from?.value?.[0]?.name || "Unknown";
+            const sender = parsed.from?.value?.[0]?.address || parsed.from?.value?.[0]?.name || "Unknown";
 
             entries.push({
               id: `icloud-${msg.uid}`,

@@ -33,11 +33,7 @@ async function getAccessToken(): Promise<string | null> {
   if (tokenSet?.accessToken) {
     if (tokenSet.isExpired()) {
       // Refresh the token
-      const newTokens = await refreshTokens(
-        tokenSet.refreshToken!,
-        prefs.gmailClientId,
-        prefs.gmailClientSecret
-      );
+      const newTokens = await refreshTokens(tokenSet.refreshToken!, prefs.gmailClientId, prefs.gmailClientSecret);
       if (newTokens) {
         await client.setTokens(newTokens);
         return newTokens.access_token;
@@ -281,9 +277,7 @@ export const gmailSource: DataSource = {
         return (await msgResponse.json()) as GmailMessage;
       });
 
-      const messages = (await Promise.all(messagePromises)).filter(
-        (m): m is GmailMessage => m !== null
-      );
+      const messages = (await Promise.all(messagePromises)).filter((m): m is GmailMessage => m !== null);
 
       for (const msg of messages) {
         const body = extractMessageBody(msg.payload);
@@ -319,19 +313,16 @@ export const gmailSource: DataSource = {
     const accessToken = await getAccessToken();
     if (!accessToken) return;
 
-    await fetch(
-      `https://gmail.googleapis.com/gmail/v1/users/me/messages/${entry.messageId}/modify`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          removeLabelIds: ["UNREAD"],
-        }),
-      }
-    );
+    await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${entry.messageId}/modify`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        removeLabelIds: ["UNREAD"],
+      }),
+    });
   },
 
   async deleteMessage(entry: OTPEntry): Promise<void> {
@@ -341,12 +332,9 @@ export const gmailSource: DataSource = {
     if (!accessToken) return;
 
     // Move to trash instead of permanent delete for safety
-    await fetch(
-      `https://gmail.googleapis.com/gmail/v1/users/me/messages/${entry.messageId}/trash`,
-      {
-        method: "POST",
-        headers: { Authorization: `Bearer ${accessToken}` },
-      }
-    );
+    await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${entry.messageId}/trash`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
   },
 };
