@@ -22,6 +22,7 @@ export interface Preferences {
   icloudEmail?: string;
   icloudAppPassword?: string;
   lookbackMinutes: string;
+  backgroundRefreshInterval: string;
 }
 
 export interface DataSource {

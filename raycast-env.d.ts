@@ -27,7 +27,9 @@ type ExtensionPreferences = {
   /** iCloud Email - Your iCloud email address */
   "icloudEmail"?: string,
   /** iCloud App Password - App-specific password (generate at appleid.apple.com) */
-  "icloudAppPassword"?: string
+  "icloudAppPassword"?: string,
+  /** Background Refresh Interval - How often to refresh OTPs in the background */
+  "backgroundRefreshInterval": "1" | "5" | "10" | "15" | "30" | "0"
 }
 
 /** Preferences accessible in all the extension's commands */
@@ -36,10 +38,14 @@ declare type Preferences = ExtensionPreferences
 declare namespace Preferences {
   /** Preferences accessible in the `view-2fa-codes` command */
   export type View2FaCodes = ExtensionPreferences & {}
+  /** Preferences accessible in the `background-refresh` command */
+  export type BackgroundRefresh = ExtensionPreferences & {}
 }
 
 declare namespace Arguments {
   /** Arguments passed to the `view-2fa-codes` command */
   export type View2FaCodes = {}
+  /** Arguments passed to the `background-refresh` command */
+  export type BackgroundRefresh = {}
 }
 

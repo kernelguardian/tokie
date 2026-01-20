@@ -8,6 +8,7 @@ import {
   getPreferenceValues,
   Icon,
   List,
+  LocalStorage,
   openExtensionPreferences,
   showHUD,
   showToast,
@@ -23,6 +24,7 @@ import {
   isGmailAuthorized,
   checkMessagesAccess,
 } from "./sources";
+import { getCachedOTPs, OTP_CACHE_KEY } from "./background-refresh";
 
 const SOURCE_ICONS: Record<OTPSource, Icon> = {
   imessage: Icon.Message,
@@ -100,12 +102,30 @@ export default function ListOTPs() {
 
     allOTPs.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
 
+    // Update cache
+    await LocalStorage.setItem(OTP_CACHE_KEY, JSON.stringify(allOTPs));
+
     setOTPs(allOTPs);
     setIsLoading(false);
   }, [lookbackMinutes, prefs.enableGmail, prefs.gmailClientId]);
 
   useEffect(() => {
+    // Load from cache first for instant display
+    getCachedOTPs().then((cached) => {
+      if (cached.length > 0) {
+        setOTPs(cached);
+      }
+    });
+
+    // Then fetch fresh data
     loadOTPs();
+
+    // Background refresh every 30 seconds
+    const interval = setInterval(() => {
+      loadOTPs();
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, [loadOTPs]);
 
   const handleCopy = useCallback(
@@ -208,7 +228,7 @@ export default function ListOTPs() {
 
   const hasEnabledSource = prefs.enableIMessage || prefs.enableGmail || prefs.enableICloudMail;
 
-  const needsGmailAuth = prefs.enableGmail && prefs.gmailClientId && !gmailAuthorized;
+  const needsGmailAuth = prefs.enableGmail && prefs.gmailClientId && !gmailAuthorized && !isLoading;
   const needsGmailConfig = prefs.enableGmail && !prefs.gmailClientId;
   const needsICloudConfig =
     prefs.enableICloudMail && (!prefs.icloudEmail || !prefs.icloudAppPassword);

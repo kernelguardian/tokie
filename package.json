@@ -14,6 +14,13 @@
       "title": "View 2FA Codes",
       "description": "View and copy recent one-time passcodes from your messages and emails",
       "mode": "view"
+    },
+    {
+      "name": "background-refresh",
+      "title": "Background Refresh",
+      "description": "Periodically fetch OTPs in the background",
+      "mode": "no-view",
+      "interval": "1m"
     }
   ],
   "preferences": [
@@ -100,6 +107,22 @@
       "description": "App-specific password (generate at appleid.apple.com)",
       "type": "password",
       "required": false
+    },
+    {
+      "name": "backgroundRefreshInterval",
+      "title": "Background Refresh Interval",
+      "description": "How often to refresh OTPs in the background",
+      "type": "dropdown",
+      "default": "10",
+      "required": false,
+      "data": [
+        { "title": "1 minute", "value": "1" },
+        { "title": "5 minutes", "value": "5" },
+        { "title": "10 minutes", "value": "10" },
+        { "title": "15 minutes", "value": "15" },
+        { "title": "30 minutes", "value": "30" },
+        { "title": "Disabled", "value": "0" }
+      ]
     }
   ],
   "dependencies": {
