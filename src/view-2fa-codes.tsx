@@ -20,8 +20,11 @@ import {
   imessageSource,
   gmailSource,
   icloudSource,
+  outlookSource,
   authorizeGmail,
   isGmailAuthorized,
+  authorizeOutlook,
+  isOutlookAuthorized,
   checkMessagesAccess,
 } from "./sources";
 import { getCachedOTPs, OTP_CACHE_KEY } from "./background-refresh";
@@ -30,18 +33,21 @@ const SOURCE_ICONS: Record<OTPSource, Icon> = {
   imessage: Icon.Message,
   gmail: Icon.Envelope,
   icloud: Icon.Cloud,
+  outlook: Icon.Envelope,
 };
 
 const SOURCE_COLORS: Record<OTPSource, Color> = {
   imessage: Color.Green,
   gmail: Color.Red,
   icloud: Color.Blue,
+  outlook: Color.Blue,
 };
 
 const SOURCE_LABELS: Record<OTPSource, string> = {
   imessage: "iMessage",
   gmail: "Gmail",
   icloud: "iCloud",
+  outlook: "Outlook",
 };
 
 function formatTimestamp(date: Date): string {
@@ -75,6 +81,7 @@ export default function ListOTPs() {
   const [otps, setOTPs] = useState<OTPEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [gmailAuthorized, setGmailAuthorized] = useState(false);
+  const [outlookAuthorized, setOutlookAuthorized] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const prefs = getPreferenceValues<Preferences>();
   const lookbackMinutes = parseInt(prefs.lookbackMinutes, 10) || 10;
@@ -83,11 +90,16 @@ export default function ListOTPs() {
     setIsLoading(true);
 
     const allOTPs: OTPEntry[] = [];
-    const sources = [imessageSource, gmailSource, icloudSource];
+    const sources = [imessageSource, gmailSource, icloudSource, outlookSource];
 
     if (prefs.enableGmail && prefs.gmailClientId) {
       const authorized = await isGmailAuthorized();
       setGmailAuthorized(authorized);
+    }
+
+    if (prefs.enableOutlook && prefs.outlookClientId) {
+      const authorized = await isOutlookAuthorized();
+      setOutlookAuthorized(authorized);
     }
 
     const results = await Promise.allSettled(sources.map((source) => source.fetchOTPs(lookbackMinutes)));
@@ -131,8 +143,9 @@ export default function ListOTPs() {
       await Clipboard.copy(entry.code, { concealed: true });
       await showHUD(`Copied ${entry.code}`);
 
-      if (entry.source === "gmail" || entry.source === "icloud") {
-        const source = entry.source === "gmail" ? gmailSource : icloudSource;
+      if (entry.source === "gmail" || entry.source === "icloud" || entry.source === "outlook") {
+        const source =
+          entry.source === "gmail" ? gmailSource : entry.source === "outlook" ? outlookSource : icloudSource;
 
         if (prefs.markAsRead && source.markAsRead) {
           try {
@@ -156,7 +169,7 @@ export default function ListOTPs() {
   );
 
   const handleMarkAsRead = useCallback(async (entry: OTPEntry) => {
-    const source = entry.source === "gmail" ? gmailSource : icloudSource;
+    const source = entry.source === "gmail" ? gmailSource : entry.source === "outlook" ? outlookSource : icloudSource;
     if (!source.markAsRead) return;
 
     const toast = await showToast({
@@ -175,7 +188,7 @@ export default function ListOTPs() {
   }, []);
 
   const handleDelete = useCallback(async (entry: OTPEntry) => {
-    const source = entry.source === "gmail" ? gmailSource : icloudSource;
+    const source = entry.source === "gmail" ? gmailSource : entry.source === "outlook" ? outlookSource : icloudSource;
     if (!source.deleteMessage) return;
 
     const confirmed = await confirmAlert({
@@ -224,10 +237,31 @@ export default function ListOTPs() {
     }
   }, [loadOTPs]);
 
-  const hasEnabledSource = prefs.enableIMessage || prefs.enableGmail || prefs.enableICloudMail;
+  const handleOutlookAuth = useCallback(async () => {
+    const toast = await showToast({
+      style: Toast.Style.Animated,
+      title: "Connecting to Outlook...",
+    });
+
+    try {
+      await authorizeOutlook();
+      setOutlookAuthorized(true);
+      toast.style = Toast.Style.Success;
+      toast.title = "Outlook connected";
+      await loadOTPs();
+    } catch (error) {
+      toast.style = Toast.Style.Failure;
+      toast.title = "Failed to connect Outlook";
+      toast.message = error instanceof Error ? error.message : undefined;
+    }
+  }, [loadOTPs]);
+
+  const hasEnabledSource = prefs.enableIMessage || prefs.enableGmail || prefs.enableICloudMail || prefs.enableOutlook;
 
   const needsGmailAuth = prefs.enableGmail && prefs.gmailClientId && !gmailAuthorized && !isLoading;
   const needsGmailConfig = prefs.enableGmail && !prefs.gmailClientId;
+  const needsOutlookAuth = prefs.enableOutlook && prefs.outlookClientId && !outlookAuthorized && !isLoading;
+  const needsOutlookConfig = prefs.enableOutlook && !prefs.outlookClientId;
   const needsICloudConfig = prefs.enableICloudMail && (!prefs.icloudEmail || !prefs.icloudAppPassword);
   const needsMessagesAccess = prefs.enableIMessage && !checkMessagesAccess();
 
@@ -268,6 +302,36 @@ export default function ListOTPs() {
         <List.Section title="Configuration Required">
           <List.Item
             title="Configure Gmail"
+            subtitle="Add OAuth Client ID in preferences"
+            icon={{ source: Icon.Envelope, tintColor: Color.Orange }}
+            actions={
+              <ActionPanel>
+                <Action title="Open Preferences" icon={Icon.Gear} onAction={openExtensionPreferences} />
+              </ActionPanel>
+            }
+          />
+        </List.Section>
+      )}
+
+      {needsOutlookAuth && (
+        <List.Section title="Setup Required">
+          <List.Item
+            title="Connect Outlook"
+            subtitle="Authorization required to fetch OTPs"
+            icon={{ source: Icon.Envelope, tintColor: Color.Blue }}
+            actions={
+              <ActionPanel>
+                <Action title="Connect Outlook" icon={Icon.Link} onAction={handleOutlookAuth} />
+              </ActionPanel>
+            }
+          />
+        </List.Section>
+      )}
+
+      {needsOutlookConfig && (
+        <List.Section title="Configuration Required">
+          <List.Item
+            title="Configure Outlook"
             subtitle="Add OAuth Client ID in preferences"
             icon={{ source: Icon.Envelope, tintColor: Color.Orange }}
             actions={
@@ -370,7 +434,7 @@ export default function ListOTPs() {
                     />
                   </ActionPanel.Section>
 
-                  {(entry.source === "gmail" || entry.source === "icloud") && (
+                  {(entry.source === "gmail" || entry.source === "icloud" || entry.source === "outlook") && (
                     <ActionPanel.Section>
                       <Action title="Mark as Read" icon={Icon.Eye} onAction={() => handleMarkAsRead(entry)} />
                       <Action

@@ -1,6 +1,13 @@
 import { LocalStorage, getPreferenceValues } from "@raycast/api";
 import { OTPEntry } from "./types";
-import { imessageSource, gmailSource, icloudSource, isGmailAuthorized } from "./sources";
+import {
+  imessageSource,
+  gmailSource,
+  icloudSource,
+  outlookSource,
+  isGmailAuthorized,
+  isOutlookAuthorized,
+} from "./sources";
 
 export const OTP_CACHE_KEY = "cached-otps";
 const LAST_REFRESH_KEY = "last-background-refresh";
@@ -44,8 +51,14 @@ export default async function backgroundRefresh() {
     if (!authorized) return;
   }
 
+  // Skip if Outlook is enabled but not authorized
+  if (prefs.enableOutlook && prefs.outlookClientId) {
+    const authorized = await isOutlookAuthorized();
+    if (!authorized) return;
+  }
+
   const allOTPs: OTPEntry[] = [];
-  const sources = [imessageSource, gmailSource, icloudSource];
+  const sources = [imessageSource, gmailSource, icloudSource, outlookSource];
 
   const results = await Promise.allSettled(sources.map((source) => source.fetchOTPs(lookbackMinutes)));
 

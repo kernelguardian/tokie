@@ -1,4 +1,4 @@
-export type OTPSource = "imessage" | "gmail" | "icloud";
+export type OTPSource = "imessage" | "gmail" | "icloud" | "outlook";
 
 export interface OTPEntry {
   id: string;

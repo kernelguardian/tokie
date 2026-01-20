@@ -1,10 +1,10 @@
 # Tokie
 
-Unified OTP retrieval from iMessage, Gmail, and iCloud Mail. Quickly copy verification codes without context switching.
+Unified OTP retrieval from iMessage, Gmail, Outlook, and iCloud Mail. Quickly copy verification codes without context switching.
 
 ## Features
 
-- Fetch OTP codes from **iMessage/SMS**, **Gmail**, and **iCloud Mail**
+- Fetch OTP codes from **iMessage/SMS**, **Gmail**, **Outlook/Hotmail**, and **iCloud Mail**
 - Auto-copy codes to clipboard
 - View full message content inline
 - Optional auto-delete and mark-as-read for emails
@@ -76,6 +76,47 @@ Unified OTP retrieval from iMessage, Gmail, and iCloud Mail. Quickly copy verifi
 
 ---
 
+### Microsoft Outlook / Hotmail
+
+**Requirements:**
+
+- Microsoft Azure account
+- Azure App Registration with OAuth 2.0 credentials
+
+**Setup:**
+
+1. **Create an Azure App Registration**
+   - Go to [Azure Portal](https://portal.azure.com/)
+   - Navigate to **Azure Active Directory** → **App registrations**
+   - Click **New registration**
+   - Name your app (e.g., "Tokie")
+   - Select **Accounts in any organizational directory and personal Microsoft accounts**
+   - Add redirect URI: **Web** → `https://raycast.com/redirect?packageName=tokie`
+   - Click **Register**
+
+2. **Configure API Permissions**
+   - In your app registration, go to **API permissions**
+   - Click **Add a permission** → **Microsoft Graph** → **Delegated permissions**
+   - Add: `Mail.Read`, `Mail.ReadWrite`, `offline_access`
+   - Click **Grant admin consent** (if available) or permissions will be requested on first use
+
+3. **Get Credentials**
+   - Go to **Overview** and copy the **Application (client) ID**
+   - For Client Secret (optional, for Web app type):
+     - Go to **Certificates & secrets** → **New client secret**
+     - Copy the secret value immediately (it won't be shown again)
+
+4. **Configure in Raycast**
+   - Open Tokie preferences
+   - Enable "Use Outlook/Hotmail"
+   - Paste your **Outlook Client ID**
+   - Paste your **Outlook Client Secret** (if using Web app type)
+   - On first use, you'll be prompted to authorize via browser
+
+**Note:** Personal Microsoft accounts (Outlook.com, Hotmail.com) work without admin consent. For work/school accounts, you may need admin approval.
+
+---
+
 ### iCloud Mail
 
 **Requirements:**
@@ -103,18 +144,22 @@ Unified OTP retrieval from iMessage, Gmail, and iCloud Mail. Quickly copy verifi
 
 ## Preferences
 
-| Preference              | Description                                                               |
-| ----------------------- | ------------------------------------------------------------------------- |
-| **Use iMessage**        | Enable fetching OTPs from iMessage and SMS messages                       |
-| **Use Gmail**           | Enable fetching OTPs from Gmail (requires OAuth setup)                    |
-| **Use iCloud Mail**     | Enable fetching OTPs from iCloud Mail via IMAP                            |
-| **Mark as Read**        | Automatically mark emails as read after copying OTP (Gmail & iCloud only) |
-| **Delete After Copy**   | Automatically delete emails after copying OTP (Gmail & iCloud only)       |
-| **Lookback Time**       | How many minutes back to search for OTPs (default: 3)                     |
-| **Gmail Client ID**     | OAuth Client ID from Google Cloud Console                                 |
-| **Gmail Client Secret** | OAuth Client Secret from Google Cloud Console                             |
-| **iCloud Email**        | Your iCloud email address                                                 |
-| **iCloud App Password** | App-specific password from appleid.apple.com                              |
+| Preference                      | Description                                                                           |
+| ------------------------------- | ------------------------------------------------------------------------------------- |
+| **Use iMessage**                | Enable fetching OTPs from iMessage and SMS messages                                   |
+| **Use Gmail**                   | Enable fetching OTPs from Gmail (requires OAuth setup)                                |
+| **Use Outlook/Hotmail**         | Enable fetching OTPs from Microsoft Outlook/Hotmail (requires OAuth setup)            |
+| **Use iCloud Mail**             | Enable fetching OTPs from iCloud Mail via IMAP                                        |
+| **Mark as Read**                | Automatically mark emails as read after copying OTP (Gmail, Outlook & iCloud)         |
+| **Delete After Copy**           | Automatically delete emails after copying OTP (Gmail, Outlook & iCloud)               |
+| **Lookback Time**               | How many minutes back to search for OTPs (default: 3)                                 |
+| **Background Refresh Interval** | How often to refresh OTPs in the background (1, 5, 10, 15, 30 minutes, or disabled)   |
+| **Gmail Client ID**             | OAuth Client ID from Google Cloud Console                                             |
+| **Gmail Client Secret**         | OAuth Client Secret from Google Cloud Console                                         |
+| **Outlook Client ID**           | OAuth Client ID from Azure App Registration                                           |
+| **Outlook Client Secret**       | OAuth Client Secret from Azure App Registration                                       |
+| **iCloud Email**                | Your iCloud email address                                                             |
+| **iCloud App Password**         | App-specific password from appleid.apple.com                                          |
 
 ---
 
@@ -152,6 +197,14 @@ Codes must be 4-8 digits. Common non-OTP patterns (currency, order numbers, trac
 2. Ensure app-specific password is 16 characters (without dashes) or 19 characters (with dashes)
 3. Generate a new app-specific password if the current one doesn't work
 4. Check that iCloud Mail is enabled for your Apple ID
+
+### Outlook authentication fails
+
+1. Verify Client ID is correct (it's a GUID format like `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`)
+2. Check that redirect URI matches exactly: `https://raycast.com/redirect?packageName=tokie`
+3. Ensure the required API permissions are added (Mail.Read, Mail.ReadWrite, offline_access)
+4. For work/school accounts, check if admin consent is required
+5. Try revoking access at [account.live.com/consent/Manage](https://account.live.com/consent/Manage) and re-authenticating
 
 ---
 

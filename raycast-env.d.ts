@@ -14,6 +14,8 @@ type ExtensionPreferences = {
   "enableGmail": boolean,
   /** Use iCloud Mail - Fetch OTPs from iCloud Mail via IMAP */
   "enableICloudMail": boolean,
+  /** Use Outlook/Hotmail - Fetch OTPs from Microsoft Outlook/Hotmail (requires OAuth setup) */
+  "enableOutlook": boolean,
   /** Mark as Read - Mark emails as read after copying OTP (Gmail and iCloud) */
   "markAsRead": boolean,
   /** Delete After Copy - Delete email after copying OTP (Gmail and iCloud) */
@@ -24,6 +26,10 @@ type ExtensionPreferences = {
   "gmailClientId"?: string,
   /** Gmail Client Secret - OAuth Client Secret (only for Web application type) */
   "gmailClientSecret"?: string,
+  /** Outlook Client ID - OAuth Client ID for Microsoft Graph API access (Azure App Registration) */
+  "outlookClientId"?: string,
+  /** Outlook Client Secret - OAuth Client Secret (only for Web application type) */
+  "outlookClientSecret"?: string,
   /** iCloud Email - Your iCloud email address */
   "icloudEmail"?: string,
   /** iCloud App Password - App-specific password (generate at appleid.apple.com) */

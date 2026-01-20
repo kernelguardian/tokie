@@ -2,12 +2,17 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "tokie",
   "title": "Tokie",
-  "description": "Unified OTP retrieval from iMessage, Gmail, and iCloud Mail. Quickly copy verification codes without context switching.",
+  "description": "Unified OTP retrieval from iMessage, Gmail, Outlook, and iCloud Mail. Quickly copy verification codes without context switching.",
   "icon": "extension-icon.png",
   "author": "asish.bm",
-  "categories": ["Productivity", "Security"],
+  "categories": [
+    "Productivity",
+    "Security"
+  ],
   "license": "MIT",
-  "platforms": ["macOS"],
+  "platforms": [
+    "macOS"
+  ],
   "commands": [
     {
       "name": "view-2fa-codes",
@@ -46,6 +51,15 @@
       "name": "enableICloudMail",
       "title": "Use iCloud Mail",
       "description": "Fetch OTPs from iCloud Mail via IMAP",
+      "type": "checkbox",
+      "default": false,
+      "required": false,
+      "label": "Yes"
+    },
+    {
+      "name": "enableOutlook",
+      "title": "Use Outlook/Hotmail",
+      "description": "Fetch OTPs from Microsoft Outlook/Hotmail (requires OAuth setup)",
       "type": "checkbox",
       "default": false,
       "required": false,
@@ -94,6 +108,21 @@
       "required": false
     },
     {
+      "name": "outlookClientId",
+      "title": "Outlook Client ID",
+      "description": "OAuth Client ID for Microsoft Graph API access (Azure App Registration)",
+      "type": "textfield",
+      "required": false,
+      "placeholder": "your-client-id-guid"
+    },
+    {
+      "name": "outlookClientSecret",
+      "title": "Outlook Client Secret",
+      "description": "OAuth Client Secret (only for Web application type)",
+      "type": "password",
+      "required": false
+    },
+    {
       "name": "icloudEmail",
       "title": "iCloud Email",
       "description": "Your iCloud email address",
@@ -116,12 +145,30 @@
       "default": "10",
       "required": false,
       "data": [
-        { "title": "1 minute", "value": "1" },
-        { "title": "5 minutes", "value": "5" },
-        { "title": "10 minutes", "value": "10" },
-        { "title": "15 minutes", "value": "15" },
-        { "title": "30 minutes", "value": "30" },
-        { "title": "Disabled", "value": "0" }
+        {
+          "title": "1 minute",
+          "value": "1"
+        },
+        {
+          "title": "5 minutes",
+          "value": "5"
+        },
+        {
+          "title": "10 minutes",
+          "value": "10"
+        },
+        {
+          "title": "15 minutes",
+          "value": "15"
+        },
+        {
+          "title": "30 minutes",
+          "value": "30"
+        },
+        {
+          "title": "Disabled",
+          "value": "0"
+        }
       ]
     }
   ],
