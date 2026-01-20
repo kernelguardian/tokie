@@ -1,6 +1,6 @@
 # Changelog
 
-## [Initial Release] - 2025-01-19
+## [Initial Release] - {PR_MERGE_DATE}
 
 - Fetch OTP codes from iMessage/SMS, Gmail, and iCloud Mail
 - Auto-copy codes to clipboard with single action

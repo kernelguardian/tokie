@@ -11,18 +11,6 @@ export interface OTPEntry {
   messageId?: string;
 }
 
-export interface Preferences {
-  enableIMessage: boolean;
-  enableGmail: boolean;
-  enableICloudMail: boolean;
-  markAsRead: boolean;
-  autoDelete: boolean;
-  gmailClientId?: string;
-  gmailClientSecret?: string;
-  icloudEmail?: string;
-  icloudAppPassword?: string;
-  lookbackMinutes: string;
-}
 
 export interface DataSource {
   name: OTPSource;

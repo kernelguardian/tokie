@@ -1,5 +1,4 @@
 import { OAuth, getPreferenceValues } from "@raycast/api";
-import fetch from "node-fetch";
 import { DataSource, OTPEntry, Preferences } from "../types";
 import { extractOTP } from "../otp-detector";
 
