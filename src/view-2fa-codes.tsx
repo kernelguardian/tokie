@@ -15,7 +15,7 @@ import {
   Toast,
 } from "@raycast/api";
 import { useCallback, useEffect, useState } from "react";
-import { OTPEntry, OTPSource, Preferences } from "./types";
+import { OTPEntry, OTPSource } from "./types";
 import {
   imessageSource,
   gmailSource,

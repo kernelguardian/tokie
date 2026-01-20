@@ -1,7 +1,7 @@
 import { getPreferenceValues } from "@raycast/api";
 import { ImapFlow } from "imapflow";
 import { simpleParser } from "mailparser";
-import { DataSource, OTPEntry, Preferences } from "../types";
+import { DataSource, OTPEntry } from "../types";
 import { extractOTP } from "../otp-detector";
 
 const ICLOUD_IMAP_HOST = "imap.mail.me.com";

@@ -1,5 +1,5 @@
 import { LocalStorage, getPreferenceValues } from "@raycast/api";
-import { OTPEntry, Preferences } from "./types";
+import { OTPEntry } from "./types";
 import { imessageSource, gmailSource, icloudSource, isGmailAuthorized } from "./sources";
 
 export const OTP_CACHE_KEY = "cached-otps";

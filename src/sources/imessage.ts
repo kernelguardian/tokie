@@ -3,7 +3,7 @@ import { existsSync } from "fs";
 import { homedir } from "os";
 import { join } from "path";
 import { getPreferenceValues } from "@raycast/api";
-import { DataSource, OTPEntry, Preferences } from "../types";
+import { DataSource, OTPEntry } from "../types";
 import { extractOTP } from "../otp-detector";
 
 const MESSAGES_DB_PATH = join(homedir(), "Library", "Messages", "chat.db");

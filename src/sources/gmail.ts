@@ -1,5 +1,5 @@
 import { OAuth, getPreferenceValues } from "@raycast/api";
-import { DataSource, OTPEntry, Preferences } from "../types";
+import { DataSource, OTPEntry } from "../types";
 import { extractOTP } from "../otp-detector";
 
 const GMAIL_SCOPES = [
