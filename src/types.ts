@@ -11,7 +11,6 @@ export interface OTPEntry {
   messageId?: string;
 }
 
-
 export interface DataSource {
   name: OTPSource;
   isEnabled: () => boolean;
