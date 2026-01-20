@@ -128,8 +128,7 @@
   "dependencies": {
     "@raycast/api": "^1.83.0",
     "imapflow": "^1.0.164",
-    "mailparser": "^3.7.1",
-    "node-fetch": "^3.3.2"
+    "mailparser": "^3.7.1"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^1.0.11",
